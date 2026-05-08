@@ -119,3 +119,4 @@ After that, Cursor loads **`~/.cursor/rules/github-actions-workflow-policy.mdc`*
 ## Publish readiness
 
 Before publishing, run through `PUBLISH_CHECKLIST.md`.
+# CursorNotify
