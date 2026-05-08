@@ -40,6 +40,12 @@ secrets: inherit
 - Замените `OWNER/CursorNotify` на ваш форк/апстрим (переменная окружения `CURSOR_NOTIFY_GHA_REPO` при генерации).
 - Закрепите `REF` (например `main` или тег `v1`).
 - Репозиторий с reusable workflow должен быть **доступен** GitHub для вызывающего репо (обычно public).
+- Не оставляйте placeholder `OWNER` в итоговом `uses`; это приводит к ошибке `workflow was not found`.
+
+## Проверка owner (диагностика)
+
+- Если добавляете precheck для `CURSOR_NOTIFY_GHA_REPO_OWNER`, сообщение должно явно указывать имя переменной и репозиторий (`${GITHUB_REPOSITORY}`).
+- Избегайте ложного стопа деплоя: при пустой переменной допустим warning + fallback на конкретный owner, уже указанный в `uses`.
 
 ## Структура jobs
 

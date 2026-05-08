@@ -25,6 +25,14 @@ Enforce the local contract in `~/.cursor/workflow-policy/` whenever workflows ar
 4. If anything is missing, add or fix using the snippet. Substitute `OWNER/CursorNotify` and `@REF` from user context or env `CURSOR_NOTIFY_GHA_REPO`; default ref `main` if unspecified.
 5. Remind the user: repository must define secrets `TELEGRAM_BOT_TOKEN_NOTIFY` and `TELEGRAM_CHAT_ID` (e.g. `scripts/push-gh-telegram-secrets.sh` from the CursorNotify repo). The upstream repo that hosts the reusable workflow must be accessible (typically public).
 6. Keep deploy notification formatting centralized in reusable workflow: status-dependent emoji (`✅ success`, `❌ failure`, `⚪ cancelled`, `❔ unknown`) and Telegram `parse_mode=HTML` for readable message layout.
+7. Validate reusable workflow source before editing:
+   - never leave placeholder `OWNER` in `uses`;
+   - never invent owner/repo names; derive from known project context (repo remote, explicit user input, existing workflow references);
+   - if owner cannot be determined confidently, ask user before changing `uses`.
+8. When adding owner validation guard in deploy workflow, print explicit diagnostics but avoid false hard-fail:
+   - if owner variable is empty, emit `::warning` with exact variable name and repository (`${GITHUB_REPOSITORY}`);
+   - keep deploy runnable when `uses` already points to a concrete valid owner.
+9. Keep policy/rules synchronized with workflow behavior (if guard semantics change from fail-fast to fallback warning, update related `.cursor/rules/*.mdc` and requirements text in the same change).
 
 ## Do not
 
