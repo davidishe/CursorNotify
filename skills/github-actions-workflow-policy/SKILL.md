@@ -24,6 +24,7 @@ Enforce the local contract in `~/.cursor/workflow-policy/` whenever workflows ar
    - uses `secrets: inherit`.
 4. If anything is missing, add or fix using the snippet. Substitute `OWNER/CursorNotify` and `@REF` from user context or env `CURSOR_NOTIFY_GHA_REPO`; default ref `main` if unspecified.
 5. Remind the user: repository must define secrets `TELEGRAM_BOT_TOKEN_NOTIFY` and `TELEGRAM_CHAT_ID` (e.g. `scripts/push-gh-telegram-secrets.sh` from the CursorNotify repo). The upstream repo that hosts the reusable workflow must be accessible (typically public).
+6. Keep deploy notification formatting centralized in reusable workflow: status-dependent emoji (`✅ success`, `❌ failure`, `⚪ cancelled`, `❔ unknown`) and Telegram `parse_mode=HTML` for readable message layout.
 
 ## Do not
 
