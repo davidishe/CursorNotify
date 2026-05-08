@@ -1,0 +1,10 @@
+---
+description: Always load telegram completion notify skill
+alwaysApply: true
+---
+
+# Use Telegram Notify Skill
+
+Before handling any user task, read and follow `~/.cursor/skills/telegram-completion-notify/SKILL.md`.
+
+Apply this skill when configuring, validating, or updating Telegram completion notifications and related hook setup.

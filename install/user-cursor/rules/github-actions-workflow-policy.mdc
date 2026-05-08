@@ -1,0 +1,17 @@
+---
+description: Apply local workflow policy when editing GitHub Actions workflows
+globs: "**/.github/workflows/**/*.yml,**/.github/workflows/**/*.yaml"
+alwaysApply: false
+---
+
+# GitHub Actions — локальная политика workflow
+
+Когда пользователь добавляет или меняет файлы в `.github/workflows/`, сначала прочитай и соблюдай контракт:
+
+1. Открой **`~/.cursor/workflow-policy/REQUIREMENTS.md`** и при необходимости **`~/.cursor/workflow-policy/policy.json`**, фрагменты в **`~/.cursor/workflow-policy/snippets/`**.
+2. Для пайплайна с **деплоем** проверь: есть отдельный job **notify** с `needs` на job деплоя, `if: always()`, вызов reusable `reusable-telegram-deploy-notify.yml` через `uses: ...`, `with.deploy_result: ${{ needs.<id_деплоя>.result }}`, `secrets: inherit`. Не вставляй длинный inline `curl` к Telegram в проект — только reusable workflow.
+3. Если контракт уже выполнен — не раздувай diff.
+4. Не коммить секреты. Напомни при необходимости про `~/.cursor/telegram-notify.env` и скрипты `push-gh-telegram-secrets.sh` / `push-gh-telegram-secrets-all.sh` из репозитория CursorNotify.
+5. При неоднозначности (несколько deploy jobs) спроси пользователя, какой job считать основным для `needs` у notify.
+
+Подробный алгоритм: skill **`github-actions-workflow-policy`** (`~/.cursor/skills/github-actions-workflow-policy/SKILL.md`).

@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "description": "Local workflow requirements for GitHub Actions + Telegram deploy notify",
+  "reusableWorkflow": {
+    "pathInUpstreamRepo": ".github/workflows/reusable-telegram-deploy-notify.yml",
+    "usesPatternRemote": "OWNER/CursorNotify/.github/workflows/reusable-telegram-deploy-notify.yml@REF",
+    "usesPatternLocal": "./.github/workflows/reusable-telegram-deploy-notify.yml"
+  },
+  "requiredRepositorySecrets": [
+    "TELEGRAM_BOT_TOKEN_NOTIFY",
+    "TELEGRAM_CHAT_ID"
+  ],
+  "defaultJobIds": {
+    "deploy": "deploy",
+    "notify": "notify"
+  },
+  "notifyJobRequirements": {
+    "needsDeployJob": true,
+    "ifAlways": true,
+    "mustCallReusableTelegramNotify": true,
+    "mustUseSecretsInherit": true,
+    "withDeployResultExpression": "${{ needs.<deploy_job_id>.result }}"
+  }
+}

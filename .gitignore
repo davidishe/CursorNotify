@@ -1,0 +1,3 @@
+telegram-notify.env
+.env
+*.local

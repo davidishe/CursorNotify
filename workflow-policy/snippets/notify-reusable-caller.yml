@@ -1,0 +1,21 @@
+# Snippet: add as a job next to your deploy job. Replace DEPLOY_JOB_ID.
+#
+# Prefer local vendored reusable (no public CursorNotify on GitHub):
+#
+# notify:
+#   needs: [DEPLOY_JOB_ID]
+#   if: always()
+#   uses: ./.github/workflows/reusable-telegram-deploy-notify.yml
+#   with:
+#     deploy_result: ${{ needs.DEPLOY_JOB_ID.result }}
+#   secrets: inherit
+#
+# Or remote (CursorNotify published): OWNER/CursorNotify/...@REF
+
+notify:
+  needs: [deploy]
+  if: always()
+  uses: ./.github/workflows/reusable-telegram-deploy-notify.yml
+  with:
+    deploy_result: ${{ needs.deploy.result }}
+  secrets: inherit

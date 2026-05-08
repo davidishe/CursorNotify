@@ -1,0 +1,19 @@
+{
+  "name": "telegram-completion-notify",
+  "displayName": "Telegram Completion Notify",
+  "version": "0.1.0",
+  "description": "Send Telegram notifications when Cursor completes a task, with secrets stored only on the user's machine.",
+  "author": {
+    "name": "akobiyada"
+  },
+  "license": "MIT",
+  "keywords": [
+    "telegram",
+    "notifications",
+    "cursor-hooks",
+    "completion"
+  ],
+  "category": "developer-tools",
+  "skills": "./skills/",
+  "rules": "./rules/"
+}

@@ -1,0 +1,27 @@
+# Template: copy to YOUR_REPO/.github/workflows/ and replace __UPSTREAM__/ref.
+# Or run: scripts/install-reusable-telegram-notify.sh /path/to/your/repo
+#
+# Wire "needs: [deploy]" and deploy_result to match YOUR deploy job id.
+name: Deploy and notify (Telegram)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy
+        run: |
+          echo "Replace with your deploy steps."
+
+  notify:
+    needs: [deploy]
+    if: always()
+    uses: __UPSTREAM__/.github/workflows/reusable-telegram-deploy-notify.yml@__REF__
+    with:
+      deploy_result: ${{ needs.deploy.result }}
+    secrets: inherit

@@ -1,0 +1,25 @@
+# Example workflow for this repo. Notify logic lives in reusable-telegram-deploy-notify.yml
+# so other repositories can call the same file via uses: OWNER/CursorNotify/.github/workflows/...
+name: Deploy and notify
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy
+        run: |
+          echo "Replace this step with your real deploy commands."
+
+  notify:
+    needs: [deploy]
+    if: always()
+    uses: ./.github/workflows/reusable-telegram-deploy-notify.yml
+    with:
+      deploy_result: ${{ needs.deploy.result }}
+    secrets: inherit

@@ -1,0 +1,9 @@
+# Snippet: minimal deploy job placeholder (customize steps and triggers).
+
+deploy:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v4
+    - name: Deploy
+      run: |
+        echo "Replace with your deploy commands."

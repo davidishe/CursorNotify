@@ -1,0 +1,63 @@
+# Call from any repository: one place to maintain Telegram deploy notifications.
+# secrets: inherit — use TELEGRAM_BOT_TOKEN_NOTIFY and TELEGRAM_CHAT_ID on the caller repo.
+name: Reusable Telegram deploy notify
+
+on:
+  workflow_call:
+    inputs:
+      deploy_result:
+        description: Pass needs.<deploy_job>.result from the caller
+        required: true
+        type: string
+    secrets:
+      TELEGRAM_BOT_TOKEN_NOTIFY:
+        required: false
+      TELEGRAM_CHAT_ID:
+        required: false
+
+jobs:
+  telegram_notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Telegram deploy result
+        continue-on-error: true
+        env:
+          TELEGRAM_BOT_TOKEN_NOTIFY: ${{ secrets.TELEGRAM_BOT_TOKEN_NOTIFY }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          DEPLOY_RESULT: ${{ inputs.deploy_result }}
+          GH_REPO: ${{ github.repository }}
+          GH_REF: ${{ github.ref_name }}
+          GH_SHA: ${{ github.sha }}
+          GH_WORKFLOW: ${{ github.workflow }}
+          GH_RUN_ID: ${{ github.run_id }}
+          GH_SERVER_URL: ${{ github.server_url }}
+        run: |
+          set -u
+          if [ -z "${TELEGRAM_BOT_TOKEN_NOTIFY:-}" ] || [ -z "${TELEGRAM_CHAT_ID:-}" ]; then
+            exit 0
+          fi
+          SHORT_SHA="${GH_SHA:-}"
+          if [ "${#SHORT_SHA}" -gt 7 ]; then
+            SHORT_SHA="${SHORT_SHA:0:7}"
+          fi
+          BASE_URL="${GH_SERVER_URL:-https://github.com}"
+          REPO="${GH_REPO:-}"
+          RUN_ID="${GH_RUN_ID:-}"
+          if [ -n "${REPO}" ] && [ -n "${RUN_ID}" ]; then
+            RUN_URL="${BASE_URL}/${REPO}/actions/runs/${RUN_ID}"
+          else
+            RUN_URL="${BASE_URL}"
+          fi
+          MESSAGE="$(printf 'GitHub Actions: deploy finished\nStatus: %s\nWorkflow: %s\nRepo: %s\nRef: %s\nSHA: %s\nRun: %s' \
+            "${DEPLOY_RESULT:-unknown}" \
+            "${GH_WORKFLOW:-}" \
+            "${GH_REPO:-}" \
+            "${GH_REF:-}" \
+            "${SHORT_SHA}" \
+            "${RUN_URL}")"
+          curl -fsS -m 8 -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN_NOTIFY}/sendMessage" \
+            -d "chat_id=${TELEGRAM_CHAT_ID}" \
+            --data-urlencode "text=${MESSAGE}" \
+            -d "disable_web_page_preview=true" \
+            >/dev/null 2>&1 || true
+          exit 0
